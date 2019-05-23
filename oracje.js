@@ -4,12 +4,7 @@
  *
  * @typedef {Object} Oracle
  *
- * @property {Function} cmdRecognition
- * @property {Function} cmdAdd
- * @property {Function} cmdSetDifficulty
- * @property {Function} cmdAttacks
- * @property {Function} cmdBuys
- * @property {Function} cmdCheckAbility
+ * @property {Function} cmdRecognition recognition of provided command
  * @property {Array} participantsList list of all participants in game
  * @property {number} standardModificator modificates difficulty of game
  * @property {Array} availableSkills list of all availabe in game skill
