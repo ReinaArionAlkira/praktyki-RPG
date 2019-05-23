@@ -35,9 +35,6 @@ while(true) {
 
 /*function command(){
   if (a.match(regex)) {
-
   } {
-
   }
-
 }*/
