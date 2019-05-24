@@ -12,6 +12,8 @@
  *
  * @exports oracle
  */
+let Equipment = require("./equipment.js");
+
 module.exports = {
   cmdRecognition: function () {},
 
@@ -53,6 +55,6 @@ module.exports = {
   ],
 
   availableEquipment: [
-    //...
+    new Equipment.Melee("miecz",1,1)
   ],
 }
