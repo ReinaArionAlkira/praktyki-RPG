@@ -8,7 +8,7 @@ let Equipment = require("./equipment.js");
  *
  * @property {Function} cmdRecognition recognition of provided command
  * @property {Array} participantsList list of all participants in game
- * @property {number} standardModificator modificates difficulty of game
+ * @property {number} standardModifier modificates difficulty of game
  * @property {Array} availableSkills list of all availabe in game skill
  * @property {Array} availableEquipment list of all availabe in game equipment
  *
@@ -18,14 +18,42 @@ module.exports = {
   cmdRecognition: function () {},
 
   cmdAdd: function () {},
-  cmdSetDifficulty: function () {},
+  /**
+   * Sets difficulty of game
+   *
+   * @param {string} difficulty difficulty you want to set
+   *
+   * @returns {bool} false on error, true if difficulty was set correctly
+   */
+  cmdSetDifficulty: function (difficulty = "") {
+    switch (difficulty.toLowerCase()) {
+      case "trivial":
+        this.standardModifier = 5;
+        break;
+      case "easy":
+        this.standardModifier = 0;
+        break;
+      case "moderate":
+        this.standardModifier = -5;
+        break;
+      case "difficult":
+        this.standardModifier = -10;
+        break;
+      case "nearly impossible":
+        this.standardModifier = -15;
+        break;
+      default:
+        return false;
+    }
+    return true;
+  },
   cmdAttacks: function () {},
   cmdBuys: function () {},
   cmdCheckAbility: function () {},
 
   participantsList: [],
 
-  standardModificator: 0,
+  standardModifier: 0,
 
   /**
    * availableSkills[0] <- Athletic
