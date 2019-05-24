@@ -1,3 +1,5 @@
+let Equipment = require("./equipment.js");
+
 /**
  * Oracle object
  * @module oracle
@@ -52,7 +54,28 @@ module.exports = {
     "vocation"
   ],
 
+  /**
+   * availableEquipment[0] <- Melee - dagger
+   * availableEquipment[1] <- Melee - sword
+   * availableEquipment[2] <- Melee - battle axe
+   * availableEquipment[3] <- Projectile - slingshot
+   * availableEquipment[4] <- Projectile - longbow
+   * availableEquipment[5] <- Projectile - crossbow
+   * availableEquipment[6] <- Armor - leather tunic
+   * availableEquipment[7] <- Armor - chain mail
+   * availableEquipment[8] <- Armor - iron armor
+   *
+   * @type {Array}
+   */
   availableEquipment: [
-    //...
+    new Equipment.Melee("dagger", 1, 5),
+    new Equipment.Melee("sword", 2, 25),
+    new Equipment.Melee("battle axe", 3, 75),
+    new Equipment.Projectile("slingshot", 5, 50),
+    new Equipment.Projectile("longbow", 8, 100),
+    new Equipment.Projectile("crossbow", 11, 250),
+    new Equipment.Armor("leather tunic", (-1), 1, 50),
+    new Equipment.Armor("chain mail", (-2), 2, 300),
+    new Equipment.Armor("iron armor", (-5), 3, 1500)
   ],
 }
