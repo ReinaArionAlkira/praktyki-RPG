@@ -26,32 +26,111 @@ module.exports = {
    * @returns {bool} false on error, true if difficulty was set correctly
    */
   cmdSetDifficulty: function (difficulty = "") {
+    let message = "";
     switch (difficulty.toLowerCase()) {
       case "trivial":
         this.standardModifier = 5;
+        message = "I see, that we have some cowards here."
         break;
       case "easy":
         this.standardModifier = 0;
+        message = "That game will not be a challenge."
         break;
       case "moderate":
         this.standardModifier = -5;
+        message = "You will not regret that decision."
         break;
       case "difficult":
         this.standardModifier = -10;
+        message = "I am glad to see so brave people here."
         break;
       case "nearly impossible":
         this.standardModifier = -15;
+        message = "I hope you know this game will be worse than hell."
         break;
       default:
         return false;
     }
+    console.log("The Oracle: " + message);
     return true;
   },
-  cmdAttacks: function () {},
+  /**
+   * Simulates first player attacks second
+   *
+   * @param {string} attackerName name of attacker
+   * @param {string} victimName name of victim
+   *
+   * @returns {bool} false on error, true if attack was carried on
+   */
+  cmdAttacks: function (attackerName, victimName) {
+    let dices =
+      this.findParticipantAttrib(attackerName, "phy") +
+      //modyfikatory broni +
+      this.hasParticipantSkill(attackerName, "martial");
+    /* if (combatDices < Projectile Combat Dices) {Projectile Combat Dices} */
+    dices += this.standardModifier;
+
+    /** Make throws */
+    let oneCount = 0;
+    for (let i = 0; i < dices; i++) {
+      if ((Math.floor(Math.random() * 6) + 1) === 1) oneCount++;
+    }
+
+  },
   cmdBuys: function () {},
   cmdCheckAbility: function () {},
 
+  // <editor-fold desc="participants">
   participantsList: [],
+
+  /**
+   * Searches for index of participant in participantsList
+   *
+   * @param {string} participantName name of participant you want to check
+   *
+   * @returns {number} index of participant in participantsList
+   */
+  findParticipantIndex: function (participantName) {
+    return this.participantsList.map(function (e,i,a,participantName) {
+      if (e.name === participantName) return i;
+    });
+  },
+  /**
+   * Searches for value of specified participant's attribute
+   *
+   * @param {string} participantName name of participant you want to check
+   * @param {string} attribName name of attrib you want to check
+   *
+   * @return {number} participant's attrib value
+   **/
+  findParticipantAttrib: function (participantName, attribName) {
+    attribName = attribName.toLowerCase();
+    attrib = attribName === "phy" ? 0 : (attribName === "men" ? 1 : (attribName === "vit" ? 2 : (attribName === "luc" ? 3 : false)));
+    if (attrib === false) return undefined;
+
+    return this.participantsList.map(function (e,i,a,participantName,attribName) {
+      if (e.name === participantName) return e.attribs[attrib];
+    });
+  },
+  /**
+   * Checks if player has specified skill
+   *
+   * @param {string} participantName name of participant you want to check
+   * @param {string} skillName name of skill you want to check
+   *
+   * @returns {bool} true if player has that skill
+   */
+  hasParticipantSkill: function (participantName, skillName) {
+    return (this.participantsList.map(function (e,i,a,participantName,skillName) {
+      if (e.name === participantName) {
+        e.skills.map(function (e,i,a,skillName) {
+          if (e === skillName) return true;
+        });
+      }
+      return false;
+    });
+  },
+  // </editor-fold>
 
   standardModifier: 0,
 
