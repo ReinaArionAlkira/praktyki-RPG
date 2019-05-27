@@ -159,8 +159,12 @@ console.log(dices);
       console.log("zaatakowano.")
     }
   },
-  cmdBuys: function () {},
-  cmdCheckAbility: function () {},
+  cmdBuys: function () {
+
+  },
+  cmdCheckAbility: function () {
+    
+  },
 
   // <editor-fold desc="participants">
   participantsList: [],
