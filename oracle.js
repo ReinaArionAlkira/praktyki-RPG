@@ -47,7 +47,7 @@ module.exports = {
     }
     if (diff.test(a)) {
       let regDiff = /(trivial|easy|moderate|difficult$|nearly\simpossible){1}/g;
-      let difficulty = a.match(regDiff);
+      let difficulty = a.match(regDiff)[0];
       this.cmdSetDifficulty(difficulty);
     }
     if (attacks.test(a)) {
