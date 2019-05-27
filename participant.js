@@ -15,7 +15,7 @@
  *
  * @exports participant
  */
-module.exports = function (name = "", atribs = [1,1,1,1], skills = []) {
+module.exports = function (name = "", attribs = [1,1,1,1], skills = []) {
   this.name = name;
   this.alive = true;
 
