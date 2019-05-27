@@ -150,13 +150,18 @@ console.log(dices);
       if ((Math.floor(Math.random() * 6) + 1) === 1) dmg++;
     }
 
+    let message = "The Oracle: ";
     if (dmg > 0) {
       let index = this.findParticipantIndex(victimName);
       this.participantsList[index].attribs[2] -= dmg;
+      message += attackerName + " dealt " + dmg + " damage to " +
+        victimName + ".";
       if (this.participantsList[index].attribs[2] <= 0) {
         this.participantsList[index].alive = false;
+        message = "\nThis attack has ended " + victimName + "'s life."
       }
-      console.log("zaatakowano.")
+      console.log(message);
+      return true;
     }
   },
   /**
@@ -177,10 +182,10 @@ console.log(dices);
 
     let hasPlayerItem =
       this.participantsList[buyerIndex].inventory.map(function (e,i,a,itemName) {
-        e.name === itemName;
+        if (e.name === itemName) return true;
       });
 
-    if (hasPlayerItem) {
+    if (hasPlayerItem === true) {
         console.log("The Oracle: I think having two the same weapons is not good.");
         return true;
     }
