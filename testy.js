@@ -30,26 +30,22 @@ while (true) {
     console.log(atrName);
     console.log(atribs);
     console.log(player);
-    break;
   }
   if (diff.test(a)) {
     let regDiff = /(trivial|easy|moderate|difficult$|nearly\simpossible){1}/g;
     let difficulty = a.match(regDiff);
     console.log(difficulty);
-    break;
   }
   if (attacks.test(a)) {
     let b = a.split(' attacks ', );
     let attacker = b[0];
     let attacked = b[1];
-    break;
   }
   if (buys.test(a)) {
     let b = a.split(' buys ', );
     let buyer = b[0];
     let item = b[1];
     console.log(buyer, item);
-    break;
   }
   if (checkAbility.test(a)) {
     let b = a.split(' ', );
@@ -72,6 +68,5 @@ while (true) {
     console.log(atribs);
     console.log(skills);
     console.log(player);
-    break;
   }
 }
