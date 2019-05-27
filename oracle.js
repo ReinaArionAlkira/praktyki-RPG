@@ -17,8 +17,8 @@ let Equipment = require("./equipment.js");
 module.exports = {
   cmdRecognition: function () {},
 
-  cmdAdd: function () {
-    
+  cmdAdd: function (player, atrName, atribs) {
+
   },
   /**
    * Sets difficulty of game
