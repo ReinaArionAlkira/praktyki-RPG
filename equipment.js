@@ -46,7 +46,7 @@ module.exports = {
    * @class
    *
    * @constructor
-   * 
+   *
    * @property {string} name name of armor
    * @property {number} phy should be <0, number of PHY subtracted from player while using this armor
    * @property {number} dmgReduction defines how much damage will be reduced by this armor

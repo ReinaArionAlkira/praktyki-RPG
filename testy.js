@@ -1,6 +1,6 @@
 const readlineSync = require('readline-sync');
-//skille
-let add = /add{1}\s.*[A-Z]?\w+\s[A-Z]?[\w]*\s?((([1][0-5]|[1-9])\sLUC|([1][0-5]|[1-9])\sVIT|([1][0-5]|[1-9])\sMEN|([1][0-5]|[1-9])\sPHY)\s?){4}/g;
+
+let add = /add{1}\s.*[A-Z]?\w+\s[A-Z]?[\w]*\s?((([1][0-5]|[1-9])\sLUC|([1][0-5]|[1-9])\sVIT|([1][0-5]|[1-9])\sMEN|([1][0-5]|[1-9])\sPHY)\s?){4}(\s?athletics|\s?lore|\s?martial|\s?medicine|\s?psionic|\s?rhetoric|\s?science|\s?subterfuge|\s?survival|\s?vocation){2}/g;
 let diff = /set\sdifficulty\s(trivial|easy|moderate|difficult|nearly\simpossible){1}/g;
 let attacks = /\D+\s\D*\s?attacks\s\D+\s\D*\s?/g;
 let buys = /\D+\s\D*\s?buys\s\D+/g ;
@@ -26,7 +26,9 @@ while (true) {
     for (var i = 0; i < atribs.length; i++) {
       atribs[i] = parseInt(atribs[i]);
     }
-    console.log("a: ", c);
+    skills = b.slice(b.length - 2, );
+    console.log(skills)
+    console.log("a: ", );
     console.log(atrName);
     console.log(atribs);
     console.log(player);
