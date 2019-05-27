@@ -28,7 +28,7 @@ module.exports = {
 
     if (add.test(a)) {
       let b = a.split(' ', );
-      let c = b.slice(1, (b.length - 8));
+      let c = b.slice(1, (b.length - 10));
       let regAdd = /([1][0-5]|[1-9])/g;
       let player = '';
       if (c.length == 1) {
