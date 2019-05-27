@@ -5,7 +5,7 @@ let diff = /set\sdifficulty\s(trivial|easy|moderate|difficult|nearly\simpossible
 let attacks = /\D+\s\D*\s?attacks\s\D+\s?\D*/g;
 let buys = /\D+\s\D*\s?buys\s\D+/g ;
 let checkAbility = /check\sability\s\D+\s\D*\s?(VIT\s?|LUC\s?|MEN\s?|PHY\s?){1,4}(athletics|lore|martial|medicine|psionic|rhetoric|science|subterfuge|survival|vocation){0,10}/g;
-let regAtrName = /(VIT|MEN|PHY|LUC)/g;
+let regAtrName = /(VIT|MEN|PHY|LUC)/;
 let regSkill = /(athletics|lore|martial|medicine|psionic|rhetoric|science|subterfuge|survival|vocation)/g
 
 let a = '';
@@ -61,15 +61,15 @@ while (true) {
       player = c[0] + ' ' + c[1];
       c = c.slice(2, );
     }
-    let atribs = new Array ();
+    let attribs = [];
     var i = 0;
-    while (regAtrName .test(c[i])) {
-      atribs[i] = c[i];
+    while (regAtrName.test(c[i])) {
+      attribs[i] = c[i];
       i++;
       c.slice(1, );
     }
-    skills = c.slice(atribs.length, );
-    console.log(atribs);
+    skills = c.slice(attribs.length, );
+    console.log(attribs);
     console.log(skills);
     console.log(player);
   }

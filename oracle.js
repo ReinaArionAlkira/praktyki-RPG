@@ -21,9 +21,9 @@ module.exports = {
     let add = /add{1}\s.*[A-Z]?\w+\s[A-Z]?[\w]*\s?((([1][0-5]|[1-9])\sLUC|([1][0-5]|[1-9])\sVIT|([1][0-5]|[1-9])\sMEN|([1][0-5]|[1-9])\sPHY)\s?){4}(\s?athletics|\s?lore|\s?martial|\s?medicine|\s?psionic|\s?rhetoric|\s?science|\s?subterfuge|\s?survival|\s?vocation){2}/g;
     let diff = /set\sdifficulty\s(trivial|easy|moderate|difficult|nearly\simpossible){1}/g;
     let attacks = /\D+\s\D*\s?attacks\s\D+\s?\D*/g;
-    let buys = /\D+\s\D*\s?buys\s\D+/g ;
+    let buys = /\D+\s\D*\s?buys\s\D+\s?D*/g ;
     let checkAbility = /check\sability\s\D+\s\D*\s?(VIT\s?|LUC\s?|MEN\s?|PHY\s?){1,4}(athletics|lore|martial|medicine|psionic|rhetoric|science|subterfuge|survival|vocation){0,10}/g;
-    let regAtrName = /(VIT|MEN|PHY|LUC)/g;
+    let regAtrName = /(VIT|MEN|PHY|LUC)/;
     let regSkill = /(athletics|lore|martial|medicine|psionic|rhetoric|science|subterfuge|survival|vocation)/g
 
     if (add.test(a)) {
@@ -74,7 +74,7 @@ module.exports = {
       }
       let attribs = new Array ();
       var i = 0;
-      while (regAtrName .test(c[i])) {
+      while (regAtrName.test(c[i])) {
         attribs[i] = c[i];
         i++;
         c.slice(1, );
@@ -199,8 +199,82 @@ console.log(dices);
     this.participantsList[buyerIndex].inventory.push(item);
     console.log(this.participantsList[buyerIndex]);
   },
-  cmdCheckAbility: function () {
 
+//komentarz
+
+
+  clamp: function (minAtr, min, max) {
+    if (minAtr > max) {
+      return max;
+    } else if (minAtr < min) {
+      return min;
+    } else {
+      return minAtr;
+    }
+  },
+
+// komentarz
+
+
+  cmdCheckAbility: function (player, attribs, skills) {
+    let checkAtr = new Array();
+    let checkSkill = new Array();
+    for (let j = 0; j < attribs.length; j++) {
+      for(let z = 0; z < 4; z ++){
+        if (this.getParticipantAttrib(player, attribs[j])) {
+          checkAtr[j] = this.getParticipantAttrib(player, attribs[j]);
+        }
+      }
+    }
+    for (let k = 0; k < skills.length; k++) {
+      if (this.hasParticipantSkill(player, skills[k])) {
+        checkSkill[k] = this.hasParticipantSkill(player, skills[k]);
+      }
+    }
+    let minAtr = 0;
+    switch (attribs.length) {
+      case 1 :
+        minAtr = checkAtr[0];
+        break;
+      case 2 :
+        minAtr = Math.min(checkAtr[0], checkAtr[1]);
+        break;
+      case 3 :
+        minAtr = Math.min(checkAtr[0], checkAtr[1], checkAtr[2]);
+        break;
+      case 4 :
+        minAtr = Math.min(checkAtr[0], checkAtr[1], checkAtr[2], checkAtr[3]);
+        break;
+      default:
+        return false;
+        break;
+    }
+    console.log(minAtr);
+    let dices = 0;
+    if (checkSkill === true) {
+      dices = this.clamp(minAtr, 2, 13);
+    } else {
+      dices = this.clamp(minAtr, 1, 7);
+    }
+    dices += this.standardModifier;
+    for (let i = 0; i < dices; i++) {
+      let random = (Math.floor(Math.random() * 6) + 1);
+      console.log(random);
+      //zrobić sprawdzanie WSZYSTKICH wyrzuconych cyfr...
+      // liczenie piątek
+      if (random === 6) {
+        dices++;
+      } else if (random === 5) {
+        console.log("The Oracle: The result: critical failure!");
+        break;
+      } else if (random <= 1) {
+        console.log("The Oracle: The result: pass!");
+        break;
+      } else {
+        console.log("The Oracle: The result: failure!");
+        break;
+      }
+    }
   },
 
   // <editor-fold desc="participants">
