@@ -15,8 +15,7 @@
  *
  * @exports participant
  */
-module.exports = function (id, name = "", atribs = [1,1,1,1], skills = []) {
-  this.id = id;
+module.exports = function (name = "", atribs = [1,1,1,1], skills = []) {
   this.name = name;
 
   /**
