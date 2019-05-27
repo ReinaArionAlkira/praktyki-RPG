@@ -64,18 +64,28 @@ module.exports = {
    */
   cmdAttacks: function (attackerName, victimName) {
     let dices =
-      this.findParticipantAttrib(attackerName, "phy") +
-      //modyfikatory broni +
+      this.getParticipantAttrib(attackerName, "phy") +
+      this.getEquipmentBoosts(attackerName)[0] +
       this.hasParticipantSkill(attackerName, "martial");
-    /* if (combatDices < Projectile Combat Dices) {Projectile Combat Dices} */
+
+    if (dices < this.getEquipmentBoosts(attackerName)[1]) {
+      dices = this.getEquipmentBoosts(attackerName)[1];
+    }
     dices += this.standardModifier;
 
     /** Make throws */
-    let oneCount = 0;
-    for (let i = 0; i < dices; i++) {
-      if ((Math.floor(Math.random() * 6) + 1) === 1) oneCount++;
+    let dmg = 0 - this.getEquipmentBoosts(victimName)[2];
+    for (let i = 0; i < dices; i++){
+      if ((Math.floor(Math.random() * 6) + 1) === 1) dmg++;
     }
 
+    if (dmg > 0) {
+      let index = this.findParticipantIndex(victimName);
+      this.participantsList[index].attribs[2] -= dmg;
+      if (this.participantsList[index].attribs[2] < 0) {
+        this.participantsList[index].alive = false;
+      }
+    }
   },
   cmdBuys: function () {},
   cmdCheckAbility: function () {},
@@ -91,9 +101,10 @@ module.exports = {
    * @returns {number} index of participant in participantsList
    */
   findParticipantIndex: function (participantName) {
-    return this.participantsList.map(function (e,i,a,participantName) {
-      if (e.name === participantName) return i;
-    });
+    for (let i = 0; i < this.participantsList.length; i++) {
+      if (this.participantsList[i].name === participantName) return i;
+    }
+    return -1;
   },
   /**
    * Searches for value of specified participant's attribute
@@ -103,14 +114,30 @@ module.exports = {
    *
    * @return {number} participant's attrib value
    **/
-  findParticipantAttrib: function (participantName, attribName) {
-    attribName = attribName.toLowerCase();
-    attrib = attribName === "phy" ? 0 : (attribName === "men" ? 1 : (attribName === "vit" ? 2 : (attribName === "luc" ? 3 : false)));
-    if (attrib === false) return undefined;
+  getParticipantAttrib: function (participantName, attribName) {
+    let index = this.findParticipantIndex(participantName);
+    if (index === -1) return -1;
 
-    return this.participantsList.map(function (e,i,a,participantName,attribName) {
-      if (e.name === participantName) return e.attribs[attrib];
-    });
+    attribName = attribName.toLowerCase();
+    let attrib;
+    switch (attribName) {
+      case "phy":
+        attrib = 0;
+        break;
+      case "men":
+        attrib = 1;
+        break;
+      case "vit":
+        attrib = 2;
+        break;
+      case "luc":
+        attrib = 3;
+        break;
+      default:
+        return -1
+        break;
+    }
+    return this.participantsList[index].attribs[attrib];
   },
   /**
    * Checks if player has specified skill
@@ -121,15 +148,39 @@ module.exports = {
    * @returns {bool} true if player has that skill
    */
   hasParticipantSkill: function (participantName, skillName) {
-    return (this.participantsList.map(function (e,i,a,participantName,skillName) {
-      if (e.name === participantName) {
-        e.skills.map(function (e,i,a,skillName) {
-          if (e === skillName) return true;
-        });
-      }
-      return false;
-    });
+    let index = this.findParticipantIndex(participantName);
+    if (index === -1) return false;
+
+    for (let i = 0; i < this.participantsList[index].skills.length; i++) {
+      if (this.participantsList[index].skills[i] === skillName) return true;
+    }
+    return false;
   },
+  /**
+   * Returns how many boost (PHY / dices / dmg reduciton) player has
+   *
+   * @param {string} participantName name of participant you want to check
+   *
+   * @returns {Array} [0] - PHY, [1] - c. dices, [2] - dmg reduction
+   */
+   getEquipmentBoosts: function (participantName) {
+    let index = this.findParticipantIndex(participantName);
+    if (index === -1) return [-1,-1,-1];
+
+    let result = [0,0,0]
+    for (let i = 0; i < this.participantsList[index].inventory.length; i++) {
+      if (this.participantsList[index].inventory[i] instanceof Equipment.Melee) {
+        result[0] += this.participantsList[index].inventory[i].phy;
+      } else if (this.participantsList[index].inventory[i] instanceof Equipment.Projectile) {
+        result[1] += this.participantsList[index].inventory[i].combatDices;
+      } else {
+        result[0] += this.participantsList[index].inventory[i].phy;
+        result[2] += this.participantsList[index].inventory[i].dmgReduction;
+      }
+    }
+
+    return result;
+   },
   // </editor-fold>
 
   standardModifier: 0,
