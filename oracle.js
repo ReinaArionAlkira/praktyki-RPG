@@ -150,20 +150,57 @@ console.log(dices);
       if ((Math.floor(Math.random() * 6) + 1) === 1) dmg++;
     }
 
+    let message = "The Oracle: ";
     if (dmg > 0) {
       let index = this.findParticipantIndex(victimName);
       this.participantsList[index].attribs[2] -= dmg;
+      message += attackerName + " dealt " + dmg + " damage to " +
+        victimName + ".";
       if (this.participantsList[index].attribs[2] <= 0) {
         this.participantsList[index].alive = false;
+        message = "\nThis attack has ended " + victimName + "'s life."
       }
-      console.log("zaatakowano.")
+      console.log(message);
+      return true;
     }
   },
-  cmdBuys: function () {
+  /**
+   * Simulates player buying equipment
+   *
+   * @param {string} buyer player which is trying to buy
+   * @param {string} itemName name of item player wants to buy
+   *
+   * @returns {bool} false on error
+   */
+  cmdBuys: function (buyerName, itemName) {
+    let itemIndex = this.findItemIndex(itemName);
+    if (itemIndex === -1) return false;
+    let buyerIndex = this.findParticipantIndex(buyerName);
+    if (buyerIndex === -1) return false;
 
+    item = this.availableEquipment[itemIndex];
+
+    let hasPlayerItem =
+      this.participantsList[buyerIndex].inventory.map(function (e,i,a,itemName) {
+        if (e.name === itemName) return true;
+      });
+
+    if (hasPlayerItem === true) {
+        console.log("The Oracle: I think having two the same weapons is not good.");
+        return true;
+    }
+    if (item.price > this.participantsList[buyerIndex].gold) {
+      console.log("The Oracle: Usually it is very difficult to buy something");
+      console.log("when you have not enough money.");
+      return true;
+    }
+
+    this.participantsList[buyerIndex].gold -= item.price;
+    this.participantsList[buyerIndex].inventory.push(item);
+    console.log(this.participantsList[buyerIndex]);
   },
   cmdCheckAbility: function () {
-    
+
   },
 
   // <editor-fold desc="participants">
@@ -311,4 +348,18 @@ console.log(dices);
     new Equipment.Armor("chain mail", (-2), 2, 300),
     new Equipment.Armor("iron armor", (-5), 3, 1500)
   ],
+
+  /**
+   * Finds item index in availableEquipment[]
+   *
+   * @param {string} itemName name of item you want to check
+   *
+   * @returns {number} index of item in availableEquipment[]
+   */
+  findItemIndex: function (itemName) {
+    for (let i = 0; i < this.availableEquipment.length; i++) {
+      if (this.availableEquipment[i].name === itemName) return i;
+    }
+    return -1;
+  }
 }
