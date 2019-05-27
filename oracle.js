@@ -26,32 +26,162 @@ module.exports = {
    * @returns {bool} false on error, true if difficulty was set correctly
    */
   cmdSetDifficulty: function (difficulty = "") {
+    let message = "";
     switch (difficulty.toLowerCase()) {
       case "trivial":
         this.standardModifier = 5;
+        message = "I see, that we have some cowards here."
         break;
       case "easy":
         this.standardModifier = 0;
+        message = "That game will not be a challenge."
         break;
       case "moderate":
         this.standardModifier = -5;
+        message = "You will not regret that decision."
         break;
       case "difficult":
         this.standardModifier = -10;
+        message = "I am glad to see so brave people here."
         break;
       case "nearly impossible":
         this.standardModifier = -15;
+        message = "I hope you know this game will be worse than hell."
         break;
       default:
         return false;
     }
+    console.log("The Oracle: " + message);
     return true;
   },
-  cmdAttacks: function () {},
+  /**
+   * Simulates first player attacks second
+   *
+   * @param {string} attackerName name of attacker
+   * @param {string} victimName name of victim
+   *
+   * @returns {bool} false on error, true if attack was carried on
+   */
+  cmdAttacks: function (attackerName, victimName) {
+    let dices =
+      this.getParticipantAttrib(attackerName, "phy") +
+      this.getEquipmentBoosts(attackerName)[0] +
+      this.hasParticipantSkill(attackerName, "martial");
+
+    if (dices < this.getEquipmentBoosts(attackerName)[1]) {
+      dices = this.getEquipmentBoosts(attackerName)[1];
+    }
+    dices += this.standardModifier;
+
+    /** Make throws */
+    let dmg = 0 - this.getEquipmentBoosts(victimName)[2];
+    for (let i = 0; i < dices; i++){
+      if ((Math.floor(Math.random() * 6) + 1) === 1) dmg++;
+    }
+
+    if (dmg > 0) {
+      let index = this.findParticipantIndex(victimName);
+      this.participantsList[index].attribs[2] -= dmg;
+      if (this.participantsList[index].attribs[2] < 0) {
+        this.participantsList[index].alive = false;
+      }
+    }
+  },
   cmdBuys: function () {},
   cmdCheckAbility: function () {},
 
+  // <editor-fold desc="participants">
   participantsList: [],
+
+  /**
+   * Searches for index of participant in participantsList
+   *
+   * @param {string} participantName name of participant you want to check
+   *
+   * @returns {number} index of participant in participantsList
+   */
+  findParticipantIndex: function (participantName) {
+    for (let i = 0; i < this.participantsList.length; i++) {
+      if (this.participantsList[i].name === participantName) return i;
+    }
+    return -1;
+  },
+  /**
+   * Searches for value of specified participant's attribute
+   *
+   * @param {string} participantName name of participant you want to check
+   * @param {string} attribName name of attrib you want to check
+   *
+   * @return {number} participant's attrib value
+   **/
+  getParticipantAttrib: function (participantName, attribName) {
+    let index = this.findParticipantIndex(participantName);
+    if (index === -1) return -1;
+
+    attribName = attribName.toLowerCase();
+    let attrib;
+    switch (attribName) {
+      case "phy":
+        attrib = 0;
+        break;
+      case "men":
+        attrib = 1;
+        break;
+      case "vit":
+        attrib = 2;
+        break;
+      case "luc":
+        attrib = 3;
+        break;
+      default:
+        return -1
+        break;
+    }
+    return this.participantsList[index].attribs[attrib];
+  },
+  /**
+   * Checks if player has specified skill
+   *
+   * @param {string} participantName name of participant you want to check
+   * @param {string} skillName name of skill you want to check
+   *
+   * @returns {bool} true if player has that skill
+   */
+  hasParticipantSkill: function (participantName, skillName) {
+    let index = this.findParticipantIndex(participantName);
+    if (index === -1) return false;
+
+    for (let i = 0; i < this.participantsList[index].skills.length; i++) {
+      if (this.participantsList[index].skills[i] === skillName) return true;
+    }
+    return false;
+  },
+  /**
+   * Returns how many boost (PHY / dices / dmg reduciton) player has
+   *
+   * @param {string} participantName name of participant you want to check
+   *
+   * @returns {Array} [0] - PHY, [1] - c. dices, [2] - dmg reduction
+   */
+   getEquipmentBoosts: function (participantName) {
+    let index = this.findParticipantIndex(participantName);
+    if (index === -1) return [-1,-1,-1];
+
+    let result = [0,0,0]
+    for (let i = 0; i < this.participantsList[index].inventory.length; i++) {
+      if (this.participantsList[index].inventory[i] instanceof Equipment.Melee) {
+        result[0] += this.participantsList[index].inventory[i].phy;
+      } else if (this.participantsList[index].inventory[i] instanceof Equipment.Projectile) {
+        result[1] += this.participantsList[index].inventory[i].combatDices;
+      } else {
+        result[0] += this.participantsList[index].inventory[i].phy;
+        result[2] += this.participantsList[index].inventory[i].dmgReduction;
+      }
+    }
+
+    return result;
+   },
+  // </editor-fold>
 
   standardModifier: 0,
 
