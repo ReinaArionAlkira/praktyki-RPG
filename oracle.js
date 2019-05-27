@@ -251,6 +251,7 @@ console.log(dices);
     }
     console.log(minAtr);
     let dices = 0;
+    let five = [];
     if (checkSkill === true) {
       dices = this.clamp(minAtr, 2, 13);
     } else {
@@ -260,13 +261,14 @@ console.log(dices);
     for (let i = 0; i < dices; i++) {
       let random = (Math.floor(Math.random() * 6) + 1);
       console.log(random);
-      //zrobić sprawdzanie WSZYSTKICH wyrzuconych cyfr...
-      // liczenie piątek
+      if (five === dices){
+        console.log("The Oracle: The result: critical failure!");
+        break;
+      }
       if (random === 6) {
         dices++;
       } else if (random === 5) {
-        console.log("The Oracle: The result: critical failure!");
-        break;
+        five ++;
       } else if (random <= 1) {
         console.log("The Oracle: The result: pass!");
         break;
