@@ -15,7 +15,7 @@
  *
  * @exports participant
  */
-module.exports = function (name = "", atribs = [1,1,1,1], skills = []) {
+module.exports = function (name = "", attribs = [1,1,1,1], skills = []) {
   this.name = name;
 
   /**
@@ -26,7 +26,7 @@ module.exports = function (name = "", atribs = [1,1,1,1], skills = []) {
    *
    * @type {Array}
    */
-  this.attribs = atribs;
+  this.attribs = attribs;
   /**
    * Table contains indexes of two skills
    * indexes based on Oracle.availableSkills[]
@@ -40,7 +40,7 @@ module.exports = function (name = "", atribs = [1,1,1,1], skills = []) {
    *
    * @type {number}
    */
-  this.gold = attribs[3] * 15;
+  this.gold = this.attribs[3] * 15;
 
   /**
    * Equipment owned by participant
