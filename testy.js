@@ -1,5 +1,5 @@
 const readlineSync = require('readline-sync');
-
+//skille
 let add = /add{1}\s.*[A-Z]?\w+\s[A-Z]?[\w]*\s?((([1][0-5]|[1-9])\sLUC|([1][0-5]|[1-9])\sVIT|([1][0-5]|[1-9])\sMEN|([1][0-5]|[1-9])\sPHY)\s?){4}/g;
 let diff = /set\sdifficulty\s(trivial|easy|moderate|difficult|nearly\simpossible){1}/g;
 let attacks = /\D+\s\D*\s?attacks\s\D+\s\D*\s?/g;
