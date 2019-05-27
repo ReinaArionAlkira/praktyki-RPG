@@ -20,7 +20,7 @@ module.exports = {
   cmdRecognition: function (a) {
     let add = /add{1}\s.*[A-Z]?\w+\s[A-Z]?[\w]*\s?((([1][0-5]|[1-9])\sLUC|([1][0-5]|[1-9])\sVIT|([1][0-5]|[1-9])\sMEN|([1][0-5]|[1-9])\sPHY)\s?){4}(\s?athletics|\s?lore|\s?martial|\s?medicine|\s?psionic|\s?rhetoric|\s?science|\s?subterfuge|\s?survival|\s?vocation){2}/g;
     let diff = /set\sdifficulty\s(trivial|easy|moderate|difficult|nearly\simpossible){1}/g;
-    let attacks = /\D+\s\D*\s?attacks\s\D+\s\D*\s?/g;
+    let attacks = /\D+\s\D*\s?attacks\s\D+\s?\D*/g;
     let buys = /\D+\s\D*\s?buys\s\D+/g ;
     let checkAbility = /check\sability\s\D+\s\D*\s?(VIT\s?|LUC\s?|MEN\s?|PHY\s?){1,4}(athletics|lore|martial|medicine|psionic|rhetoric|science|subterfuge|survival|vocation){0,10}/g;
     let regAtrName = /(VIT|MEN|PHY|LUC)/g;
@@ -52,9 +52,9 @@ module.exports = {
     }
     if (attacks.test(a)) {
       let b = a.split(' attacks ', );
-      let attacker = b[0];
-      let attacked = b[1];
-      this.cmdAttacks(attacker, attacked);
+      let attackerName = b[0];
+      let victimName = b[1];
+      this.cmdAttacks(attackerName, victimName);
     }
     if (buys.test(a)) {
       let b = a.split(' buys ', );
@@ -133,6 +133,7 @@ module.exports = {
    * @returns {bool} false on error, true if attack was carried on
    */
   cmdAttacks: function (attackerName, victimName) {
+    console.log(attackerName, victimName)
     let dices =
       this.getParticipantAttrib(attackerName, "phy") +
       this.getEquipmentBoosts(attackerName)[0] +
@@ -142,7 +143,7 @@ module.exports = {
       dices = this.getEquipmentBoosts(attackerName)[1];
     }
     dices += this.standardModifier;
-
+console.log(dices);
     /** Make throws */
     let dmg = 0 - this.getEquipmentBoosts(victimName)[2];
     for (let i = 0; i < dices; i++){
@@ -152,9 +153,10 @@ module.exports = {
     if (dmg > 0) {
       let index = this.findParticipantIndex(victimName);
       this.participantsList[index].attribs[2] -= dmg;
-      if (this.participantsList[index].attribs[2] < 0) {
+      if (this.participantsList[index].attribs[2] <= 0) {
         this.participantsList[index].alive = false;
       }
+      console.log("zaatakowano.")
     }
   },
   cmdBuys: function () {},
