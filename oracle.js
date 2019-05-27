@@ -1,4 +1,5 @@
 let Equipment = require("./equipment.js");
+let Participant = require("./participant.js");
 const readlineSync = require('readline-sync');
 /**
  * Oracle object
@@ -86,7 +87,9 @@ module.exports = {
 
   cmdAdd: function (player, atribs, skills) {
     this.participantsList.push(new participant(player, atribs, skills));
+    console.log(participantsList);
   },
+
   /**
    * Sets difficulty of game
    *
@@ -115,11 +118,12 @@ module.exports = {
         return false;
     }
     return true;
+    console.log(standardModifier);
   },
-  cmdAttacks: function () {},
+/*  cmdAttacks: function () {},
   cmdBuys: function () {},
   cmdCheckAbility: function () {},
-
+*/
   participantsList: [],
 
   standardModifier: 0,
@@ -164,6 +168,7 @@ module.exports = {
    *
    * @type {Array}
    */
+   /*
   availableEquipment: [
     new Equipment.Melee("dagger", 1, 5),
     new Equipment.Melee("sword", 2, 25),
@@ -174,5 +179,5 @@ module.exports = {
     new Equipment.Armor("leather tunic", (-1), 1, 50),
     new Equipment.Armor("chain mail", (-2), 2, 300),
     new Equipment.Armor("iron armor", (-5), 3, 1500)
-  ],
+  ],*/
 }
