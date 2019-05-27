@@ -15,8 +15,9 @@
  *
  * @exports participant
  */
-module.exports = function (name = "", attribs = [1,1,1,1], skills = []) {
+module.exports = function (name = "", atribs = [1,1,1,1], skills = []) {
   this.name = name;
+  this.alive = true;
 
   /**
    * attribs[0] <- PHY
@@ -27,6 +28,7 @@ module.exports = function (name = "", attribs = [1,1,1,1], skills = []) {
    * @type {Array}
    */
   this.attribs = attribs;
+
   /**
    * Table contains indexes of two skills
    * indexes based on Oracle.availableSkills[]
