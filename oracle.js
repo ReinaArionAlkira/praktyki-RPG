@@ -158,6 +158,7 @@ console.log(dices);
         victimName + ".";
       if (this.participantsList[index].attribs[2] <= 0) {
         this.participantsList[index].alive = false;
+        this.removeDeadParticipant();
         message = "\nThis attack has ended " + victimName + "'s life."
       }
       console.log(message);
@@ -251,7 +252,8 @@ console.log(dices);
     }
     console.log(minAtr);
     let dices = 0;
-    let five = [];
+    let five = 0;
+    let pass = 0;
     if (checkSkill === true) {
       dices = this.clamp(minAtr, 2, 13);
     } else {
@@ -266,18 +268,17 @@ console.log(dices);
         break;
       }
       if (random === 6) {
-        dices++;
+        dices ++;
       } else if (random === 5) {
         five ++;
-      } else if (random <= 1) {
+      } else if (random === 1) {
+        pass ++;
         console.log("The Oracle: The result: pass!");
         break;
-      } else {
-        console.log("The Oracle: The result: failure!");
-        break;
+        }
       }
-    }
-  },
+      if (pass === 0) console.log("The Oracle: The result: failure!");
+    },
 
   // <editor-fold desc="participants">
   participantsList: [],
@@ -369,6 +370,13 @@ console.log(dices);
     }
 
     return result;
+   },
+
+   removeDeadParticipant: function () {
+     for (let i = 1; i < this.participantsList.length; i++) {
+       if (this.participantsList[i].alive === false) this.participantsList.splice(i, 1);
+        continue;
+     }
    },
   // </editor-fold>
   standardModifier: 0,
